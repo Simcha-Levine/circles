@@ -56,6 +56,9 @@
         ctx.clearRect(0,0, canvas.clientWidth, canvas.clientHeight)
 
         var isStopt = 0
+        var average = 0
+        var largest = 0
+        var smalest = 0
 
         for(var i = 0; i < list.length; i++) {
             if(list[i].growing) {
@@ -64,11 +67,16 @@
             list[i].growing = drawCircle(list[i])
 
             if(list[i].growing == false) {isStopt++}
+            average += list[i].r
+            largest = Math.max(largest, list[i].r)
+            smalest = Math.min(smalest, list[i].r)
         }
 
         if(isStopt == list.length) {
             makeCircles(Math.floor(Math.random() * 10000 + 100))
             ctx.clearRect(0,0, canvas.clientWidth, canvas.clientHeight)
+
+            console.log("largest : " + largest + ", smalest : " + smalest + ", average : " + average / list.length)
         }
 
         
