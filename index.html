@@ -1,0 +1,79 @@
+<canvas id="canvas" style=" background-color: aqua;" width="1500" height="750"></canvas>
+
+<script>
+
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+
+    function drawCircle(b) {
+        ctx.beginPath()
+        ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI)
+        ctx.fillStyle = b.color
+        ctx.fill()
+        ctx.closePath()
+
+        var bol = true
+
+        for(var i = 0; i < list.length; i++) {
+
+            var a = {x : list[i].x, y : list[i].y}
+
+            if((a.x != b.x || a.y != b.y) && distance(a, b) <= b.r + list[i].r) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    function distance(a,b) {
+        return Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2)
+    }
+
+    var list = []
+
+    function makeCircles(num) {
+        list = []
+        for(i = 0; i < num; i++) {
+
+            var r = Math.floor(Math.random() * 255)
+            var g = Math.floor(Math.random() * 255)
+            var b = Math.floor(Math.random() * 255)
+
+            list.push({
+                        r : 0, 
+                        x : Math.floor(Math.random() * canvas.clientWidth), 
+                        y : Math.floor(Math.random() * canvas.clientHeight), 
+                        growing : true, 
+                        color : "rgb(" + r + ", " + g + ", " + b + ")"
+                    })
+        }
+    }
+
+    makeCircles(1000)
+
+    function draw() {
+        ctx.clearRect(0,0, canvas.clientWidth, canvas.clientHeight)
+
+        var isStopt = 0
+
+        for(var i = 0; i < list.length; i++) {
+            if(list[i].growing) {
+                list[i].r++
+            }
+            list[i].growing = drawCircle(list[i])
+
+            if(list[i].growing == false) {isStopt++}
+        }
+
+        if(isStopt == list.length) {
+            makeCircles(Math.floor(Math.random() * 10000 + 100))
+            ctx.clearRect(0,0, canvas.clientWidth, canvas.clientHeight)
+        }
+
+        
+    }
+
+    var interval = setInterval(draw, 10)
+
+</script>
